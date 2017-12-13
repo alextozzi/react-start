@@ -1,53 +1,43 @@
-const path = require('path');
-
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-const paths = {
-    DIST: path.resolve(__dirname, 'dist'),
-    SRC: path.resolve(__dirname, 'src'),
-    JS: path.resolve(__dirname, 'src/js'),
-};
+var webpack = require("webpack");
 
 module.exports = {
-    entry: path.join(paths.JS, 'app.js'),
+    entry: "./src/index.js",
     output: {
-        path: paths.DIST,
-        filename: 'app.bundle.js',
+        path: "dist/assets",
+        filename: "bundle.js",
+        publicPath: "assets"
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: path.join(paths.SRC, 'index.html'),
-        }),
-        new ExtractTextPlugin('style.bundle.css'),
-    ],
-
+    devServer: {
+        inline: true,
+        contentBase: './dist',
+        port: 3000
+    },
     module: {
-        rules: [
+        loaders: [
             {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: [
-                    'babel-loader',
-                ],
+                test: /\.js$/,
+                exclude: /(node_modules)/,
+                loader: ["babel-loader"],
+                query: {
+                    presets: ["latest", "stage-0", "react"]
+                }
             },
-
+            {
+                test: /\.json$/,
+                exclude: /(node_modules)/,
+                loader: "json-loader"
+            },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    use: 'css-loader',
-                }),
+                loader: 'style-loader!css-loader!autoprefixer-loader'
             },
             {
-                test: /\.(png|jpg|gif)$/,
-                use: [
-                    'file-loader',
-                ],
-            },
-        ],
-    },
+                test: /\.scss$/,
+                loader: 'style-loader!css-loader!autoprefixer-loader!sass-loader'
+            }
+        ]
+    }
+}
 
-    resolve: {
-        extensions: ['.js', '.jsx'],
-    },
-};
+
+
