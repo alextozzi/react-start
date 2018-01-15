@@ -13,16 +13,19 @@ export class JokeApi extends Component {
             then((Response) => Response.json()).
         then((findresponse) => {
             this.setState({
-                data:findresponse.value['joke']
+
+                data:findresponse.value['joke'].replace(/&quot;/g,'"')
             })
         })
     }
 
     render()
     {
+        var text = this.state.data;
+
         return(
             <div>
-                <h1>{this.state.data}</h1>
+                <h1>{text}</h1>
             </div>
         )
     }
